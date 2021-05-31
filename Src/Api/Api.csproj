@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <AssemblyName>Isitar.DependencyUpdater.Api</AssemblyName>
+        <RootNamespace>Isitar.DependencyUpdater.Api</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\GitLab\GitLab.csproj" />
+      <ProjectReference Include="..\Git\Git.csproj" />
+      <ProjectReference Include="..\NugetUpdater\NugetUpdater.csproj" />
+      <ProjectReference Include="..\Persistence\Persistence.csproj" />
+      <ProjectReference Include="..\Process\Process.csproj" />
+    </ItemGroup>
+
+</Project>
