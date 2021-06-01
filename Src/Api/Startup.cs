@@ -2,6 +2,7 @@ namespace Isitar.DependencyUpdater.Api
 {
     using Application;
     using Application.Common.Services;
+    using Common;
     using Git;
     using GitLab;
     using Microsoft.AspNetCore.Builder;
@@ -31,19 +32,19 @@ namespace Isitar.DependencyUpdater.Api
 
             services.AddApplication(Configuration);
             services.AddProcess();
-            services.AddPersistence();
-            
+            services.AddPersistence(Configuration);
+
             services.AddGit(Configuration);
             services.AddNugetUpdater(Configuration);
             services.AddGitlab();
-            
+
             services.AddHttpClient();
+            services.AddAutoMapper(typeof(ApiMappingProfile).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbContext dbContext)
         {
-            dbContext.Database.EnsureCreated();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

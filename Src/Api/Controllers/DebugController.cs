@@ -20,7 +20,7 @@ namespace Isitar.DependencyUpdater.Api.Controllers
         {
             await mediator.Send(new UpdateProjectDependencyCommand
             {
-                ProjectId = Guid.Parse("F9664465-29EE-475C-B7AA-55E22D141BAE"),
+                ProjectId = Guid.Parse("92470A9E-00BD-4533-874C-0C306FD9F013"),
             });
             
             return Ok();

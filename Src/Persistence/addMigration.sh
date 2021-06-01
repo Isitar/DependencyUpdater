@@ -1,0 +1,1 @@
+dotnet ef migrations add $1 -o Migrations -s ../Api/Api.csproj -p ./Persistence.csproj -c DependencyUpdaterDbContext

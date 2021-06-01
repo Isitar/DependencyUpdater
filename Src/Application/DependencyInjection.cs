@@ -1,6 +1,8 @@
 namespace Isitar.DependencyUpdater.Application
 {
-    using Common.Services;
+    using System.Reflection;
+    using Common.Mappings;
+    using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +11,9 @@ namespace Isitar.DependencyUpdater.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddMediatR(typeof(DependencyInjection).Assembly);
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(MappingProfile).Assembly);
             return services;
         }
     }
