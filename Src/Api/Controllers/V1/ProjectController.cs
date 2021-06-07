@@ -4,6 +4,7 @@ namespace Isitar.DependencyUpdater.Api.Controllers.V1
     using System.Threading.Tasks;
     using Application.Project.Commands.UpdateProject;
     using Application.Project.Queries.ProjectDetail;
+    using Application.Project.Queries.ProjectList;
     using Contracts.Requests.Project;
     using Contracts.V1;
     using Microsoft.AspNetCore.Http;
@@ -26,6 +27,13 @@ namespace Isitar.DependencyUpdater.Api.Controllers.V1
             cmd.Id = id;
             await Mediator.Send(cmd);
             return Ok();
+        }
+
+        [HttpGet(Routes.Project.AllProjects, Name = nameof(ProjectController) + "/" + nameof(AllProjectsAsync))]
+        public async Task<IActionResult> AllProjectsAsync()
+        {
+            var result = await Mediator.Send(new ProjectListQuery());
+            return Ok(result);
         }
     }
 }

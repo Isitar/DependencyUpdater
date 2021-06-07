@@ -5,6 +5,7 @@ namespace Isitar.DependencyUpdater.Api.Controllers.V1
     using Application.Platform.Commands.CreatePlatform;
     using Application.Platform.Commands.UpdatePlatform;
     using Application.Platform.Queries.PlatformDetail;
+    using Application.Platform.Queries.PlatformList;
     using Contracts.Requests.Platform;
     using Contracts.V1;
     using Microsoft.AspNetCore.Http;
@@ -36,6 +37,13 @@ namespace Isitar.DependencyUpdater.Api.Controllers.V1
         public async Task<IActionResult> PlatformDetailAsync(Guid id)
         {
             var result = await Mediator.Send(new PlatformDetailQuery {Id = id});
+            return Ok(result);
+        }
+
+        [HttpGet(Routes.Platform.AllPlatforms, Name = nameof(PlatformController) + "/" + nameof(AllPlatformsAsync))]
+        public async Task<IActionResult> AllPlatformsAsync(Guid id)
+        {
+            var result = await Mediator.Send(new PlatformListQuery());
             return Ok(result);
         }
     }

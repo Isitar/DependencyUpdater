@@ -40,6 +40,14 @@ namespace Isitar.DependencyUpdater.Api
 
             services.AddHttpClient();
             services.AddAutoMapper(typeof(ApiMappingProfile).Assembly);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AllowDev",
+                    builder =>
+                    {
+                        builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,9 +58,11 @@ namespace Isitar.DependencyUpdater.Api
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
+                
+                app.UseHttpsRedirection();
             }
+            app.UseCors("AllowDev");
 
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

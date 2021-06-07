@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetUpdater", "Src\NugetUp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitLab", "Src\GitLab\GitLab.csproj", "{9A1221BA-207E-419F-A907-FB8E2C34BB84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "Test\Application.UnitTests\Application.UnitTests.csproj", "{F9FEEC7E-B22C-4B52-91F9-65312377517E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{9A1221BA-207E-419F-A907-FB8E2C34BB84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A1221BA-207E-419F-A907-FB8E2C34BB84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A1221BA-207E-419F-A907-FB8E2C34BB84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9FEEC7E-B22C-4B52-91F9-65312377517E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9FEEC7E-B22C-4B52-91F9-65312377517E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9FEEC7E-B22C-4B52-91F9-65312377517E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9FEEC7E-B22C-4B52-91F9-65312377517E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
