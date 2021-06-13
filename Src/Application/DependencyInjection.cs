@@ -1,6 +1,7 @@
 namespace Isitar.DependencyUpdater.Application
 {
     using System.Reflection;
+    using Common.Behaviors;
     using Common.Mappings;
     using FluentValidation;
     using MediatR;
@@ -13,6 +14,7 @@ namespace Isitar.DependencyUpdater.Application
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidatorPipelineBehavior<,>));
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
             return services;
         }

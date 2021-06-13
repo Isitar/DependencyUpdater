@@ -4,7 +4,8 @@ namespace Isitar.DependencyUpdater.Domain.Entities
 
     public enum PlatformType
     {
-        Gitlab = 1,
+        GitLab = 1,
+        GitHub = 2,
     }
 
     public class Platform

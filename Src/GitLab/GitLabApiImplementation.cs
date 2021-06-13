@@ -20,7 +20,7 @@ namespace Isitar.DependencyUpdater.GitLab
         }
 
         private readonly HttpClient httpClient;
-        public PlatformType SupportedPlatformType => PlatformType.Gitlab;
+        public PlatformType SupportedPlatformType => PlatformType.GitLab;
 
         public GitLabApiImplementation(HttpClient httpClient)
         {

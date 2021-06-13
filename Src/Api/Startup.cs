@@ -11,9 +11,11 @@ namespace Isitar.DependencyUpdater.Api
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using Middlewares;
     using NugetUpdater;
     using Persistence;
     using Process;
+    using Services;
 
     public class Startup
     {
@@ -38,15 +40,14 @@ namespace Isitar.DependencyUpdater.Api
             services.AddNugetUpdater(Configuration);
             services.AddGitlab();
 
+            services.AddSingleton<IJsonSerializer, SystemTextJsonSerializer>();
+
             services.AddHttpClient();
             services.AddAutoMapper(typeof(ApiMappingProfile).Assembly);
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "AllowDev",
-                    builder =>
-                    {
-                        builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-                    });
+                    builder => { builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
             });
         }
 
@@ -58,11 +59,13 @@ namespace Isitar.DependencyUpdater.Api
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
-                
+
                 app.UseHttpsRedirection();
             }
+
             app.UseCors("AllowDev");
 
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
             app.UseRouting();
 
