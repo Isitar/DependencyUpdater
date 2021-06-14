@@ -11,6 +11,8 @@ namespace Isitar.DependencyUpdater.Application.Project.Queries.ProjectList
         public string Name { get; set; }
         public string Platform { get; set; }
 
+        public bool IsOutdated { get; set; }
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Project, ProjectListVm>()

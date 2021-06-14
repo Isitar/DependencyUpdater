@@ -37,6 +37,7 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
         {
             var project = await dbContext.Projects.Include(p => p.Platform).Where(p => p.Id.Equals(request.ProjectId)).FirstOrDefaultAsync(cancellationToken);
             var workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            var hasChanges = false;
             Directory.CreateDirectory(workingDirectory);
             try
             {
@@ -49,6 +50,7 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
                 var existingBranch = await gitService.BranchExistsAsync(UpdateBranchName, cancellationToken);
                 if (existingBranch)
                 {
+                    hasChanges = true;
                     logger.LogInformation("Update branch already exists, adding updates to it");
                 }
 
@@ -62,6 +64,7 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
                     catch
                     {
                         logger.LogError("Merge failed, scrap branch and start new one");
+                        hasChanges = false;
                         await gitService.ResetHardAsync(cancellationToken);
                         await gitService.CheckoutBranchAsync(project.TargetBranch, false, cancellationToken);
                         await gitService.DeleteBranchAsync(UpdateBranchName, true, cancellationToken);
@@ -76,10 +79,10 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
                     versionChanges.AddRange(await projectUpdater.UpdateProjectDependenciesAsync(project, workingDirectory, cancellationToken));
                 }
 
-                // no changes
+                // no new changes
                 if (versionChanges.Count == 0)
                 {
-                    logger.LogInformation("No updates for project {project}", project.Name);
+                    logger.LogInformation("No new updates for project {project}", project.Name);
                     return Unit.Value;
                 }
 
@@ -88,6 +91,7 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
                 {
                     versionChanges = versionChanges.Prepend("Dependency Updates").ToList();
                 }
+
                 await gitService.CommitAddedFilesAsync(string.Join(Environment.NewLine, versionChanges), cancellationToken);
                 await gitService.PushAsync("origin", UpdateBranchName, cancellationToken);
 
@@ -103,6 +107,11 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
             finally
             {
                 Directory.Delete(workingDirectory, true);
+                if (hasChanges && !project.IsOutdated)
+                {
+                    project.IsOutdated = true;
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                }
             }
 
             return Unit.Value;

@@ -22,5 +22,7 @@ namespace Isitar.DependencyUpdater.Domain.Entities
         public string TargetBranch { get; set; }
         public string PlatformProjectId { get; set; }
         public string Url { get; set; }
+
+        public bool IsOutdated { get; set; }
     }
 }

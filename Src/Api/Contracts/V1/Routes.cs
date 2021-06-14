@@ -14,7 +14,7 @@ namespace Isitar.DependencyUpdater.Api.Contracts.V1
             public const string PlatformDetail = PlatformBase + "/{id}";
             public const string UpdatePlatform = PlatformBase + "/{id}";
             public const string DeletePlatform = PlatformBase + "/{id}";
-            
+
             public const string CreateProject = PlatformBase + "/{id}/projects";
         }
 
@@ -25,6 +25,8 @@ namespace Isitar.DependencyUpdater.Api.Contracts.V1
             public const string ProjectDetail = ProjectBase + "/{id}";
             public const string UpdateProject = ProjectBase + "/{id}";
             public const string DeleteProject = ProjectBase + "/{id}";
+
+            public const string UpdateDependencies = ProjectBase + "/{id}/update-dependencies";
         }
     }
 }

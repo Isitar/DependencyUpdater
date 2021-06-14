@@ -2,6 +2,7 @@ namespace Isitar.DependencyUpdater.Api.Controllers.V1
 {
     using System;
     using System.Threading.Tasks;
+    using Application.DependencyMgt.Commands.UpdateProjectDependency;
     using Application.Project.Commands.UpdateProject;
     using Application.Project.Queries.ProjectDetail;
     using Application.Project.Queries.ProjectList;
@@ -34,6 +35,13 @@ namespace Isitar.DependencyUpdater.Api.Controllers.V1
         {
             var result = await Mediator.Send(new ProjectListQuery());
             return Ok(result);
+        }
+
+        [HttpPost(Routes.Project.UpdateDependencies, Name = nameof(ProjectController) + "/" + nameof(UpdateDependenciesAsync))]
+        public async Task<IActionResult> UpdateDependenciesAsync(Guid id)
+        {
+            await Mediator.Send(new UpdateProjectDependencyCommand {ProjectId = id});
+            return Ok();
         }
     }
 }
