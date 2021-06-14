@@ -7,22 +7,27 @@ namespace Isitar.DependencyUpdater.Git
     using System.Threading.Tasks;
     using Application.Common.Services;
     using Domain.Entities;
+    using Microsoft.Extensions.Logging;
 
     public class GitService : IGitService
     {
         private readonly GitSettings gitSettings;
         private readonly IProcessExecutor processExecutor;
+        private readonly ILogger<GitService> logger;
         public string WorkingDirectory { get; set; }
 
-        public GitService(GitSettings gitSettings, IProcessExecutor processExecutor)
+        private string extraConfig = string.Empty;
+
+        public GitService(GitSettings gitSettings, IProcessExecutor processExecutor, ILogger<GitService> logger)
         {
             this.gitSettings = gitSettings;
             this.processExecutor = processExecutor;
+            this.logger = logger;
         }
 
         private async Task<ProcessOutput> ExecuteGitCommandAsync(string cmd, CancellationToken cancellationToken)
         {
-            return await processExecutor.Run(WorkingDirectory, gitSettings.PathToGitExecutable, cmd, true, cancellationToken);
+            return await processExecutor.Run(WorkingDirectory, gitSettings.PathToGitExecutable, extraConfig + cmd, true, cancellationToken);
         }
 
         public async Task CloneRepositoryAsync(string url, Platform platform, CancellationToken cancellationToken)
@@ -31,13 +36,26 @@ namespace Isitar.DependencyUpdater.Git
             {
                 var keyFile = Path.GetTempFileName();
                 await File.WriteAllTextAsync(keyFile, platform.PrivateKey, Encoding.ASCII, cancellationToken);
+                var host = url.Split("@")[1].Split(":")[0];
+                var hostKeyOutput = await processExecutor.Run(WorkingDirectory, "ssh-keyscan", $"-t rsa {host}", true, cancellationToken);
+                await processExecutor.Run(WorkingDirectory, "mkdir", "/root/.ssh", true, cancellationToken);
+                await processExecutor.Run(WorkingDirectory, "touch", "/root/.ssh/known_hosts", true, cancellationToken);
+                await File.AppendAllTextAsync("/root/.ssh/known_hosts", hostKeyOutput.Output, Encoding.ASCII, cancellationToken);
                 await processExecutor.Run(WorkingDirectory, "chmod", $"400 {keyFile}", true, cancellationToken);
-                await ExecuteGitCommandAsync($" -c core.sshCommand=\"ssh -i {keyFile}\" clone {url} .", cancellationToken);
+                extraConfig += $"-c core.sshCommand=\"ssh -i {keyFile}\" ";
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(platform.GitUserName))
             {
-                await ExecuteGitCommandAsync($"clone {url} .", cancellationToken);
+                extraConfig += $"-c user.name=\"{platform.GitUserName}\" ";
             }
+
+            if (!string.IsNullOrWhiteSpace(platform.GitUserEmail))
+            {
+                extraConfig += $"-c user.email=\"{platform.GitUserEmail}\" ";
+            }
+
+            await ExecuteGitCommandAsync($"clone {url} .", cancellationToken);
         }
 
         public async Task<bool> BranchExistsAsync(string name, CancellationToken cancellationToken)

@@ -46,8 +46,7 @@ namespace Isitar.DependencyUpdater.Api
             services.AddAutoMapper(typeof(ApiMappingProfile).Assembly);
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "AllowDev",
-                    builder => { builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
+                options.AddDefaultPolicy(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
             });
         }
 
@@ -63,10 +62,8 @@ namespace Isitar.DependencyUpdater.Api
                 app.UseHttpsRedirection();
             }
 
-            app.UseCors("AllowDev");
-
             app.UseMiddleware<CustomExceptionHandlerMiddleware>();
-
+            app.UseCors();
             app.UseRouting();
 
             app.UseAuthorization();

@@ -24,6 +24,8 @@ namespace Isitar.DependencyUpdater.Application.Platform.Commands.UpdatePlatform
             platform.PrivateKey = request.PrivateKey.TrimToNull() + Environment.NewLine;
             platform.ApiBaseUrl = request.ApiBaseUrl.TrimToNull();
             platform.Token = request.Token.TrimToNull();
+            platform.GitUserName = request.GitUserName.TrimToNull();
+            platform.GitUserEmail = request.GitUserEmail.TrimToNull();
 
             await dbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;

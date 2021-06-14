@@ -107,9 +107,10 @@ namespace Isitar.DependencyUpdater.Application.DependencyMgt.Commands.UpdateProj
             finally
             {
                 Directory.Delete(workingDirectory, true);
-                if (hasChanges && !project.IsOutdated)
+                if (hasChanges && !project.IsOutdated
+                    || !hasChanges && project.IsOutdated)
                 {
-                    project.IsOutdated = true;
+                    project.IsOutdated = hasChanges;
                     await dbContext.SaveChangesAsync(cancellationToken);
                 }
             }

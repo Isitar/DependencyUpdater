@@ -9,6 +9,9 @@ namespace Isitar.DependencyUpdater.Application.Platform.Commands.UpdatePlatform
         {
             Transform(x => x.Name, n => n.TrimToNull())
                 .NotEmpty();
+
+            RuleFor(x => x.GitUserEmail)
+                .EmailAddress();
         }
     }
 }

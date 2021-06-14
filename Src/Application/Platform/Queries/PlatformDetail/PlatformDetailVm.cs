@@ -12,5 +12,7 @@ namespace Isitar.DependencyUpdater.Application.Platform.Queries.PlatformDetail
         public string PrivateKey { get; set; }
         public string ApiBaseUrl { get; set; }
         public string Token { get; set; }
+        public string GitUserName { get; set; }
+        public string GitUserEmail { get; set; }
     }
 }
