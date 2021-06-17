@@ -36,8 +36,45 @@ namespace Isitar.DependencyUpdater.Git
             {
                 var keyFile = Path.GetTempFileName();
                 await File.WriteAllTextAsync(keyFile, platform.PrivateKey, Encoding.ASCII, cancellationToken);
-                var host = url.Split("@")[1].Split(":")[0];
-                var hostKeyOutput = await processExecutor.Run(WorkingDirectory, "ssh-keyscan", $"-t rsa {host}", true, cancellationToken);
+                var host = url;
+                int? port = null;
+                // git@gitlab...
+                if (host.Contains("@"))
+                {
+                    host = host.Split("@")[1];
+                }
+
+                // http:// /https:// etc.
+                if (host.Contains("//"))
+                {
+                    host = host.Split("//")[1];
+                }
+
+                // port
+                if (host.Contains(":"))
+                {
+                    var split = host.Split(":");
+                    host = split[0];
+                    var length = 0;
+
+                    while (int.TryParse(split[1][..(length + 1)], out var parsedPort))
+                    {
+                        length++;
+                    }
+
+                    if (length > 0)
+                    {
+                        port = int.Parse(split[1][..length]);
+                    }
+                }
+
+                var keyscanArgs = "";
+                if (port.HasValue)
+                {
+                    keyscanArgs = $"-p {port.Value} ";
+                }
+
+                var hostKeyOutput = await processExecutor.Run(WorkingDirectory, "ssh-keyscan", keyscanArgs + host, true, cancellationToken);
                 await processExecutor.Run(WorkingDirectory, "mkdir", "/root/.ssh", true, cancellationToken);
                 await processExecutor.Run(WorkingDirectory, "touch", "/root/.ssh/known_hosts", true, cancellationToken);
                 await File.AppendAllTextAsync("/root/.ssh/known_hosts", hostKeyOutput.Output, Encoding.ASCII, cancellationToken);
