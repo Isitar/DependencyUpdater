@@ -3,14 +3,16 @@ using System;
 using Isitar.DependencyUpdater.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Isitar.DependencyUpdater.Persistence.Migrations
 {
     [DbContext(typeof(DependencyUpdaterDbContext))]
-    partial class DependencyUpdaterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210627133332_UpdateDependencyFlagsOnProject")]
+    partial class UpdateDependencyFlagsOnProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,6 +1,7 @@
 namespace Isitar.DependencyUpdater.Application.Project.Queries.ProjectList
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -22,7 +23,13 @@ namespace Isitar.DependencyUpdater.Application.Project.Queries.ProjectList
 
         public async Task<IEnumerable<ProjectListVm>> Handle(ProjectListQuery request, CancellationToken cancellationToken)
         {
-            return await dbContext.Projects
+            var baseQuery = dbContext.Projects.AsQueryable();
+            if (request.IsOutdated.HasValue)
+            {
+                baseQuery = baseQuery.Where(p => p.IsOutdated == request.IsOutdated.Value);
+            }
+
+            return await baseQuery
                 .ProjectTo<ProjectListVm>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

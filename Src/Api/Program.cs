@@ -14,10 +14,7 @@ namespace Isitar.DependencyUpdater.Api
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
-                // Get the DbContext instance
                 var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>();
-
-                //Do the migration asynchronously
                 await dbContext.Database.MigrateAsync();
             }
 

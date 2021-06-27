@@ -5,6 +5,6 @@ namespace Isitar.DependencyUpdater.Application.Project.Queries.ProjectList
 
     public class ProjectListQuery : IRequest<IEnumerable<ProjectListVm>>
     {
-        
+        public bool? IsOutdated { get; set; }
     }
 }

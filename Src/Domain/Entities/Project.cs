@@ -24,5 +24,8 @@ namespace Isitar.DependencyUpdater.Domain.Entities
         public string Url { get; set; }
 
         public bool IsOutdated { get; set; }
+
+        public bool CheckRequested { get; set; }
+        public bool IsChecking { get; set; }
     }
 }
