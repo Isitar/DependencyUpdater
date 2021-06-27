@@ -75,7 +75,7 @@ namespace Isitar.DependencyUpdater.Git
                 }
 
                 var hostKeyOutput = await processExecutor.Run(WorkingDirectory, "ssh-keyscan", keyscanArgs + host, true, cancellationToken);
-                await processExecutor.Run(WorkingDirectory, "mkdir", "/root/.ssh", true, cancellationToken);
+                await processExecutor.Run(WorkingDirectory, "mkdir", "-p /root/.ssh", true, cancellationToken);
                 await processExecutor.Run(WorkingDirectory, "touch", "/root/.ssh/known_hosts", true, cancellationToken);
                 await File.AppendAllTextAsync("/root/.ssh/known_hosts", hostKeyOutput.Output, Encoding.ASCII, cancellationToken);
                 await processExecutor.Run(WorkingDirectory, "chmod", $"400 {keyFile}", true, cancellationToken);
