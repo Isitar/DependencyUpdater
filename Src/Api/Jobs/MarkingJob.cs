@@ -5,15 +5,18 @@ namespace Isitar.DependencyUpdater.Api.Jobs
     using System.Threading.Tasks;
     using Application.Common.Services;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using Quartz;
 
     public class MarkingJob : IJob
     {
         private readonly IDbContext dbContext;
+        private readonly ILogger<MarkingJob> logger;
 
-        public MarkingJob(IDbContext dbContext, ISchedulerFactory schedulerFactory)
+        public MarkingJob(IDbContext dbContext, ILogger<MarkingJob> logger)
         {
             this.dbContext = dbContext;
+            this.logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -22,6 +25,7 @@ namespace Isitar.DependencyUpdater.Api.Jobs
             {
                 if (new CronExpression(project.UpdateFrequency).IsSatisfiedBy(DateTimeOffset.Now))
                 {
+                    logger.LogTrace("marking project {id} {name} for update", project.Id, project.Name);
                     project.CheckRequested = true;
                 }
             }

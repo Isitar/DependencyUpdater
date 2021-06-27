@@ -12,6 +12,8 @@ namespace Isitar.DependencyUpdater.Application.Project.Queries.ProjectList
         public string Platform { get; set; }
 
         public bool IsOutdated { get; set; }
+        public bool CheckRequested { get; set; }
+        public bool IsChecking { get; set; }
 
         public void Mapping(Profile profile)
         {

@@ -18,6 +18,8 @@ namespace Isitar.DependencyUpdater.Application.Project.Queries.ProjectDetail
         public string Url { get; set; }
 
         public bool IsOutdated { get; set; }
+        public bool CheckRequested { get; set; }
+        public bool IsChecking { get; set; }
 
         public void Mapping(Profile profile)
         {
