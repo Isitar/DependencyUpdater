@@ -38,7 +38,7 @@ namespace NugetUpdater
 
             foreach (var projectFile in Directory.GetFiles(WorkingDirectory, "*.csproj", SearchOption.AllDirectories))
             {
-                var processOutput = await processExecutor.Run(WorkingDirectory, "dotnet", "list package --outdated", true, cancellationToken);
+                var processOutput = await processExecutor.Run(WorkingDirectory, "dotnet", $"list {projectFile} package --outdated", true, cancellationToken);
                 var textLines = processOutput.Output.Split(Environment.NewLine);
                 var line = 0;
                 string currentProject = null;

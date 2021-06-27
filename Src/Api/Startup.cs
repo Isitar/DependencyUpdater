@@ -1,6 +1,5 @@
 namespace Isitar.DependencyUpdater.Api
 {
-    using System;
     using System.Text.Json;
     using Application;
     using Application.Common.Services;
@@ -34,8 +33,8 @@ namespace Isitar.DependencyUpdater.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Api", Version = "v1"}); });
+                    .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" }); });
 
             services.AddApplication(Configuration);
             services.AddProcess();
@@ -52,22 +51,20 @@ namespace Isitar.DependencyUpdater.Api
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();
 
                 q.ScheduleJob<MarkingJob>(trigger => trigger
-                    .WithIdentity("mark projects")
-                    .WithCronSchedule("0 * * * * ?")
+                                                     .WithIdentity("mark projects")
+                                                     .WithCronSchedule("0 * * * * ?")
                 );
-                
+
                 q.ScheduleJob<UpdateJob>(trigger => trigger
-                    .WithIdentity("update projects")
-                    .WithCronSchedule("0 * * * * ?")
+                                                    .WithIdentity("update projects")
+                                                    .WithCronSchedule("0 * * * * ?")
                 );
             });
-            
-                
-            services.AddQuartzServer(options =>
-            {
-                options.WaitForJobsToComplete = true;
-            });
-            
+
+
+            services.AddQuartzServer(options => { options.WaitForJobsToComplete = true; });
+
+
             services.AddHttpClient();
             services.AddAutoMapper(typeof(ApiMappingProfile).Assembly);
             services.AddCors(options => { options.AddDefaultPolicy(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); }); });
