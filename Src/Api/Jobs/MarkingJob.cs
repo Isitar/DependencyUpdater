@@ -21,9 +21,12 @@ namespace Isitar.DependencyUpdater.Api.Jobs
 
         public async Task Execute(IJobExecutionContext context)
         {
+            var now = DateTimeOffset.Now;
+            now = now.Subtract(TimeSpan.FromSeconds(now.Second));
+            now = now.Subtract(TimeSpan.FromMilliseconds(now.Millisecond));
             foreach (var project in await dbContext.Projects.Where(p => !p.IsChecking && !p.CheckRequested).ToListAsync(context.CancellationToken))
             {
-                if (new CronExpression(project.UpdateFrequency).IsSatisfiedBy(DateTimeOffset.Now))
+                if (new CronExpression(project.UpdateFrequency).IsSatisfiedBy(now))
                 {
                     logger.LogTrace("marking project {id} {name} for update", project.Id, project.Name);
                     project.CheckRequested = true;
